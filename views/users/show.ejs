@@ -1,0 +1,28 @@
+<% include ../partials/header %>
+
+<div class="row">
+    <div class="col-md-4">
+        <h1><%= user.firstName + " " + user.lastName %></h1>
+        <div class="thumbnail">
+            <img src="<%= user.avatar %>" alt="user profile image">
+            <div class="caption"><a href="mailto:<%= user.email %>"><%= user.email %></a></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <ul id="userCamps">
+            <h3><%= user.username %>'s campgrounds</h3>
+            <% campgrounds.forEach(function(campground) { %>
+                <li><a href="/campgrounds/<%= campground.id %>"><%= campground.name %></a></li>
+            <% }); %>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+When Led Zeppelin was formed in October 1968, the Telecaster became Page’s go-to instrument and he played it on stage and in the studio until 1969. It was also the main guitar used on the legendary Led Zeppelin I album. Page went on tour in 1969, and upon his return, he discovered a friend had kindly stripped the body and painted over the dragon paint job. The paint job compromised the sound and wiring, leaving only the neck pickup working. He salvaged the neck and put it on his brown string bender Tele, and has since re-stripped and restored the body in full.
+    </div>
+</div>
+
+
+<% include ../partials/footer %>
