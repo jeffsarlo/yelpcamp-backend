@@ -21,10 +21,10 @@ const express           = require("express"),
 
 console.log(process.env.DATABASEURL);
 
-mongoose.connect(process.env.DATABASEURL);
-// mongoose.connect("mongodb://localhost:27017/yelp_camp_v13", {useNewUrlParser: true});
-// mongoose.connect("mongodb+srv://lgehrig4:ReneeDBcode1!@cluster0-5yfak.mongodb.net/yelp_camp?retryWrites=true", {useNewUrlParser: true});
+const url = process.env.DATABASEURL || "mongodb://localhost:27017/yelp_camp_v13";
+mongoose.connect(url, {useNewUrlParser: true});
 
+// mongoose.connect("mongodb://localhost:27017/yelp_camp_v13", {useNewUrlParser: true});
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
