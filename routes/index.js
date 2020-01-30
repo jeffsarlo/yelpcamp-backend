@@ -14,49 +14,49 @@ router.get("/", function(req, res) {
 
 // Show register form
 router.get("/register", function(req, res){
-   res.render("register", {page: 'register'}); 
+   res.render("register", {page: 'register'});
 });
 
 // Handle register logic
 router.post("/register", function(req, res) {
     const newUser = new User({
-          username: req.body.username, 
-          firstName: req.body.firstName, 
+          username: req.body.username,
+          firstName: req.body.firstName,
           lastName: req.body.lastName,
           email: req.body.email,
-          avatar: req.body.avatar 
+          avatar: req.body.avatar
           });
     // Administrator's registration psswrd
     if (req.body.adminCode === "secretcode123") {
         newUser.isAdmin === true;
     }
-    
+
     User.register(newUser, req.body.password, function (err, user) {
       if(err){
             console.log(err);
             return res.render("register", {error: err.message});
       }
-      
+
       passport.authenticate("local")(req, res, function() {
-          req.flash("success", "Successfully signed up! Welcome to YelpCamp " + req.body.username + "!"); 
-          res.redirect("/campgrounds"); 
+          req.flash("success", "Successfully signed up! Welcome to YelpCamp " + req.body.username + "!");
+          res.redirect("/campgrounds");
       });
     });
 });
 
 // Show login form
 router.get("/login", function(req, res){
-   res.render("login", {page: 'login'}); 
-   
+   res.render("login", {page: 'login'});
+
 });
 
 // Handle login logic (app.post(route, middleware, callback))
-router.post("/login",passport.authenticate("local", 
+router.post("/login",passport.authenticate("local",
     {
         successRedirect: "/campgrounds",
         failureRedirect: "/login"
     }), function(req, res) {
-    
+
 });
 
 // Logout
@@ -85,8 +85,8 @@ router.post('/forgot', function(req, res, next) {
       User.findOne({ email: req.body.email }, function(err, user) {
         if (err) {
             req.flash('error', 'Something went wrong!');
-            return res.redirect('/forgot'); 
-        }  
+            return res.redirect('/forgot');
+        }
         if (!user) {
             req.flash('error', 'No account with that email address exists.');
             return res.redirect('/forgot');
@@ -103,15 +103,15 @@ router.post('/forgot', function(req, res, next) {
     // send the email
     function(token, user, done) {
       const smtpTransport = nodemailer.createTransport({
-        service: 'Gmail', 
+        service: 'Gmail',
         auth: {
-          user: 'jascript4@gmail.com',
-          pass: process.env.GMAILPW  // https://www.npmjs.com/package/dotenv
+          user: process.env.GMAILUN,
+          pass: process.env.GMAILPW  
         }
       });
       const mailOptions = {
         to: user.email,
-        from: 'jascript4@gmail.com',
+        from: process.env.GMAILUN,
         subject: 'YelpCamp Password Reset',
         text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
           'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
@@ -134,8 +134,8 @@ router.get('/reset/:token', function(req, res) {
   User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
     if (err) {
         req.flash('error', 'Something went wrong!');
-        return res.redirect('/forgot'); 
-        }  
+        return res.redirect('/forgot');
+        }
     if (!user) {
       req.flash('error', 'Password reset token is invalid or has expired.');
       return res.redirect('/forgot');
@@ -150,8 +150,8 @@ router.post('/reset/:token', function(req, res) {
       User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
         if (err) {
             req.flash('error', 'Something went wrong!');
-            return res.redirect('/forgot'); 
-        }  
+            return res.redirect('/forgot');
+        }
         if (!user) {
             req.flash('error', 'Password reset token is invalid or has expired.');
             return res.redirect('back');
@@ -160,12 +160,12 @@ router.post('/reset/:token', function(req, res) {
             user.setPassword(req.body.password, function(err) {
                 if (err) {
                     req.flash('error', 'Something went wrong!');
-                    return res.redirect('/forgot'); 
+                    return res.redirect('/forgot');
                 } else {
                     user.resetPasswordToken = undefined;
                     user.resetPasswordExpires = undefined;
-                } 
-                
+                }
+
 
             user.save(function(err) {
                 req.logIn(user, function(err) {
@@ -181,10 +181,10 @@ router.post('/reset/:token', function(req, res) {
     },
     function(user, done) {
       const smtpTransport = nodemailer.createTransport({
-        service: 'Gmail', 
+        service: 'Gmail',
         auth: {
           user: process.env.GMAILUN,
-          pass: process.env.GMAILPW   
+          pass: process.env.GMAILPW
         }
       });
       const mailOptions = {
@@ -215,7 +215,7 @@ router.get("/users/:id", function(req, res) {
       req.flash("error", "Something went wrong.");
       return res.redirect("/");
     }
-    
+
     Campground.find().where("author.id").equals(foundUser._id).exec(function(err, campgrounds) {
       if(err) {
         req.flash("error", "Something went wrong.");
@@ -227,6 +227,3 @@ router.get("/users/:id", function(req, res) {
 });
 
 module.exports = router;
-
-
-

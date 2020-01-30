@@ -21,9 +21,9 @@ const imageFilter = function (req, file, cb) {
 const upload = multer({ storage: storage, fileFilter: imageFilter});
 
 const cloudinary = require('cloudinary');
-cloudinary.config({ 
-  cloud_name: 'lgehrig4', 
-  api_key: process.env.CLOUDINARY_API_KEY, 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME, 
+  api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
@@ -94,7 +94,7 @@ router.get("/:id", function(req, res) {
           res.redirect("/campgrounds");
       } else {
           // Render show template with that id
-          res.render("campgrounds/show", {campground: foundCampground}); 
+          res.render("campgrounds/show", {campground: foundCampground});
       }
     });
 });
@@ -103,7 +103,7 @@ router.get("/:id", function(req, res) {
 router.get("/:id/edit", middleware.checkCampgroundOwnership, function(req, res) {
     Campground.findById(req.params.id, function(err, foundCampground) {
         res.render("campgrounds/edit", {campground: foundCampground});
-    });  
+    });
 });
 
 // UPDATE CAMPGROUND ROUTE

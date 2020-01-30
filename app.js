@@ -13,7 +13,7 @@ const express           = require("express"),
       seedDB            = require("./seeds"),
       // Require Environment variables
       db                = require('dotenv').config(),
-      
+
 // Require routes
       commentRoutes    = require("./routes/comments"),
       campgroundRoutes = require("./routes/campgrounds"),
@@ -24,7 +24,6 @@ console.log(process.env.DATABASEURL);
 const url = process.env.DATABASEURL || "mongodb://localhost:27017/yelp_camp_v13";
 mongoose.connect(url, {useNewUrlParser: true});
 
-// mongoose.connect("mongodb://localhost:27017/yelp_camp_v13", {useNewUrlParser: true});
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
@@ -62,6 +61,8 @@ app.use("/campgrounds/:id/comments", commentRoutes);
 // ==================================
 // LISTEN ROUTE
 // ==================================
-app.listen(process.env.PORT, process.env.IP, function() {
-   console.log("We're Yelping!!"); 
-});
+const port = process.env.PORT || process.env.IP || 5000;
+
+app.listen(port, () => {
+  console.log("We're Yelping!!");
+})
